@@ -17,7 +17,7 @@ org 7c00h
 
 data segment
     origin_addr dd 0,0,0    ; int16h
-    input db 0              ; 键盘输入结果
+    input db 0              ; 键盘输入结果(扫描码)
     cur_display_flag db 0   ; 表示现在所处的显示界面 0:主选单 1:功能1 2:功能2
     color_list db 1, 00000111b, 00000010b, 00100100b, 01110001b        ; 显示界面的背景色列表，当前位置+黑底白字+黑底绿字+绿底红字+白底蓝字
     clock_input_buffer db 32 dup(0)     ;时钟输入缓冲区
@@ -46,14 +46,14 @@ start:
         mov ah,[cur_display_flag]   ;获取当前显示状态
         call get_one_char           ;获取当前输入
         mov al,[input]
-        ;如果是F1(扫描码)
+        ;1.如果是F1(扫描码)
         cmp al,3bh
         je ready_to_process_F1
-        ;如果是ESC,修改显示状态为选项界面
+        ;2.如果是ESC,修改显示状态为选项界面
         cmp al,01h
         je ready_to_process_ESC
+        ;3.属于其他按键，或者没有按键输入，display函数自行处理
         jmp ready_to_display
-        ;其他输入在display函数自行处理
        
         ready_to_process_F1:    ;循环使用列表中的下一个颜色
             push ax
@@ -74,14 +74,30 @@ start:
 
         ready_to_display:
             call display ;
-        ;jmp always_loop ; 保证死循环--todo
+        call mdelay
+        jmp always_loop ; 保证死循环--todo
 
     mov ax,4c00h
     int 21h
 
-; 从键盘缓冲区读取一个字符，并存入input标签
+; 从键盘缓冲区读取一个字符，并将扫描码存入input标签
 get_one_char:
+    push ax
+    ;ah=1检查键盘缓冲区
+    mov ah,01h
+    int 16h
+    jz no_input
 
+    ;缓冲区有数据，ah=0读取缓冲区
+    mov ah,0h
+    int 16h
+    mov [input],ah
+    jmp get_one_char_end
+
+    no_input:
+        mov [input],0
+    get_one_char_end:
+        pop ax
     ret
 
 ; 屏幕显示，若功能不同，则显示内容不同
@@ -97,9 +113,20 @@ display:
     push dx
     push si
     push di
-    ;若
+    push es
+    ; 界面清空，全都设置为空格
+    cli  ;设置IF为0，防止DOS系统其他中断修改显存
+    mov bx,0b800h
+    mov es,bx
+    mov bx,0
+    mov cx,2000 ; 25行 * 80列
+    display_clear: ;整页全部显示' '
+        mov byte ptr es:[bx],' '
+        add bx,2
+        loop display_clear
+    sti
 
-    ; 显示主界面
+    ; 0.显示主界面
     case_0:
         mov di,0                ;di-当前打印功能
         mov bh,0
@@ -121,6 +148,7 @@ display:
     ;刷新显存全部内容的颜色，颜色按照color_list中的颜色和位置指定
 
     display_end:
+    pop es
     pop di
     pop si
     pop dx
@@ -184,6 +212,25 @@ show_str:
         sub ax,si   ;通过前后两次si的差值，计算打印的字符串长度
         pop es
         ret
+;---------------------------------------
+;-----------延时------------------------
+mdelay:
+    push ax
+    push dx
+
+    mov ax,0
+    mov dx,0001h    ;微调了一下，循环2^16次，大概0.1s。不然单次Delay时间太长
+    mdelay_s:
+        sub ax,1
+        sbb dx,0
+        cmp ax,0
+        jne mdelay_s
+        cmp dx,0
+        jne mdelay_s
+
+    pop dx
+    pop ax
+    ret
 ;---------------------------------------
 code ends
 end start
