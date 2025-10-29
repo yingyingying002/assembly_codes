@@ -19,16 +19,17 @@ data segment
     origin_addr dd 0,0,0    ; int16h
     input db 0              ; 键盘输入结果
     cur_display_flag db 0   ; 表示现在所处的显示界面 0:主选单 1:功能1 2:功能2
-    color_list db  1, 00000111b, 00000010b, 00100100b, 01110001b        ; 显示界面的背景色列表，当前位置+黑底白字+黑底绿字+绿底红字+白底蓝字
+    color_list db 1, 00000111b, 00000010b, 00100100b, 01110001b        ; 显示界面的背景色列表，当前位置+黑底白字+黑底绿字+绿底红字+白底蓝字
     clock_input_buffer db 32 dup(0)     ;时钟输入缓冲区
-    d1 db 'reset pc',0
-    d2 db 'start system',0
-    d3 db 'clock',0
-    d4 db 'set clock',0
+    d1 db '1.reset pc','\n',0
+    d2 db '2.start system','\n',0
+    d3 db '3.clock','\n',0
+    d4 db '4.set clock','\n',0
+    option_list dw offset d1, offset d2, offset d3, offset d4
 data ends
 
 stack segment
-    db 64 dup(0)
+    db 128 dup(0)
 stack ends
 
 code segment
@@ -37,26 +38,26 @@ start:
     mov ds,ax
     mov ax,stack
     mov ss,ax
-    mov sp,64
+    mov sp,128
     
-    call preprocess
-    mov cx,0
+    ;call preprocess
     always_loop:
-        mov ax,0
+        mov ax,0    ; ah-当前显示状态,al-当前输入
         mov ah,[cur_display_flag]   ;获取当前显示状态
         call get_one_char           ;获取当前输入
         mov al,[input]
-        ;如果是F1 -- todo
-        cmp al,''
+        ;如果是F1(扫描码)
+        cmp al,3bh
         je ready_to_process_F1
-        ;如果是ESC,修改显示状态为选项界面 -- todo
-        cmp al,''
-        mov ah,0
-        mov [cur_display_flag],0
+        ;如果是ESC,修改显示状态为选项界面
+        cmp al,01h
+        je ready_to_process_ESC
         jmp ready_to_display
         ;其他输入在display函数自行处理
        
         ready_to_process_F1:    ;循环使用列表中的下一个颜色
+            push ax
+            mov al, color_list[0]
             inc al
             cmp al,5
             je restart_color_list
@@ -64,12 +65,16 @@ start:
             restart_color_list:
                 mov al,1
             ready_to_process_F1_end:
-                mov [int],al
+                mov color_list[0],al
+            pop ax
+            jmp ready_to_display
+        ready_to_process_ESC:
+                mov ah,0
+                mov [cur_display_flag],0
 
         ready_to_display:
             call display ;
-        inc cx   ; 保证死循环
-        loop always_loop
+        ;jmp always_loop ; 保证死循环--todo
 
     mov ax,4c00h
     int 21h
@@ -86,11 +91,99 @@ get_one_char:
 ;          若当前显示状态为4(设置时间界面), al为输入的新时间界面
 ;          若当前显示状态为1~3(其他功能界面), al无效
 display:
+    push ax
+    push bx
+    push cx
+    push dx
+    push si
+    push di
     ;若
 
+    ; 显示主界面
+    case_0:
+        mov di,0                ;di-当前打印功能
+        mov bh,0
+        mov bl,color_list[0]    ;bx-当前打印字体颜色 
+        mov cx,4
+        mov dh,2
+        mov dl,20
+
+        case_0_loop:
+            push cx
+            mov cl,color_list[bx]
+            mov si, option_list[di]
+            call show_str
+            add dh,2
+            add di,2
+            pop cx
+            loop case_0_loop
+        jmp display_end
     ;刷新显存全部内容的颜色，颜色按照color_list中的颜色和位置指定
 
+    display_end:
+    pop di
+    pop si
+    pop dx
+    pop cx
+    pop bx
+    pop ax
     ret
 
+;---------------------------------------
+; 在指定的位置，用指定的颜色，显示一个用0结束的字符串
+; param:
+;   (dh): 行号(0-24)
+;   (dl): 列号(0-79)
+;   (cl): 颜色
+;   (ds:si): 指向字符串首地址
+; return:
+;   (ax): 打印的字符串长度(含末尾0)
+show_str:
+    push es
+    push si
+    push bx
+    push di
+    push cx
+
+    mov bl,cl
+    mov di,0
+    ; 显示缓冲区段地址
+    mov ax,0B800h
+    mov es,ax
+    ; 起始行-偏移地址-添加到段地址中
+    mov cx,0
+    mov cl,dh
+    mov ax,es
+    show_str_s:
+        add ax,000ah
+        loop show_str_s
+    mov es,ax
+    ; 起始列-偏移地址-添加到di寄存器
+    mov ax,0
+    mov al,dl
+    add al,al ;列偏移*2，因为每一列两个字符
+    add di,ax
+
+    ; 显示字符串
+    show_str_s1:
+        mov cx,0
+        mov cl,[si]
+        inc si
+        jcxz show_str_end
+        mov es:[di],cl
+        mov es:[di+1],bl
+        add di,2
+        jmp show_str_s1
+    
+    show_str_end:
+        pop cx
+        pop di
+        pop bx
+        mov ax,si
+        pop si
+        sub ax,si   ;通过前后两次si的差值，计算打印的字符串长度
+        pop es
+        ret
+;---------------------------------------
 code ends
 end start
