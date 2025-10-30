@@ -10,37 +10,32 @@
 ;       2.2. Esc    返回功能选项界面
 
 ; 每次通过键盘缓冲区读取输入，比手动写一个m_int9应该短很多，不需要替换中断例程，也符合当前逻辑
-
-assume cs:code,ds:data,ss:stack
+; --todo: showstr函数删掉，用BIOS自带函数取代
+; --todo: mdelay函数也可以直接替换掉，节省10B空间
+assume cs:code
 ; 程序将被加载到7C00H处，所有地址偏移都基于此计算
 org 7c00h
 
-data segment
-    origin_addr dd 0,0,0    ; int16h
+code segment
+start:
+    jmp real_start
+    ; 数据段放到代码段里，方便计算总长度
     input db 0              ; 键盘输入结果(扫描码)
     cur_display_flag db 0   ; 表示现在所处的显示界面 0:主选单 1:功能1 2:功能2
     color_list db 1, 00000111b, 00000010b, 00100100b, 01110001b        ; 显示界面的背景色列表，当前位置+黑底白字+黑底绿字+绿底红字+白底蓝字
-    clock_input_buffer db 32 dup(0)     ;时钟输入缓冲区
     d1 db '1.reset pc','\n',0
     d2 db '2.start system','\n',0
     d3 db '3.clock','\n',0
     d4 db '4.set clock','\n',0
     option_list dw offset d1, offset d2, offset d3, offset d4
-data ends
-
-stack segment
-    db 128 dup(0)
-stack ends
-
-code segment
-start:
-    mov ax,data
+    ;栈段
+    stack db 64 dup(0)
+real_start:
+    mov ax,cs
     mov ds,ax
-    mov ax,stack
+    mov ax,cs
     mov ss,ax
-    mov sp,128
-    
-    ;call preprocess
+    mov sp,offset stack+64
     always_loop:
         mov ax,0    ; ah-当前显示状态,al-当前输入
         mov ah,[cur_display_flag]   ;获取当前显示状态
@@ -77,8 +72,10 @@ start:
         call mdelay
         jmp always_loop ; 保证死循环--todo
 
-    mov ax,4c00h
-    int 21h
+    ;mov ax,4c00h
+    ;int 21h
+    call sector_boot_complete
+
 
 ; 从键盘缓冲区读取一个字符，并将扫描码存入input标签
 get_one_char:
@@ -157,62 +154,7 @@ display:
     pop ax
     ret
 
-;---------------------------------------
-; 在指定的位置，用指定的颜色，显示一个用0结束的字符串
-; param:
-;   (dh): 行号(0-24)
-;   (dl): 列号(0-79)
-;   (cl): 颜色
-;   (ds:si): 指向字符串首地址
-; return:
-;   (ax): 打印的字符串长度(含末尾0)
-show_str:
-    push es
-    push si
-    push bx
-    push di
-    push cx
 
-    mov bl,cl
-    mov di,0
-    ; 显示缓冲区段地址
-    mov ax,0B800h
-    mov es,ax
-    ; 起始行-偏移地址-添加到段地址中
-    mov cx,0
-    mov cl,dh
-    mov ax,es
-    show_str_s:
-        add ax,000ah
-        loop show_str_s
-    mov es,ax
-    ; 起始列-偏移地址-添加到di寄存器
-    mov ax,0
-    mov al,dl
-    add al,al ;列偏移*2，因为每一列两个字符
-    add di,ax
-
-    ; 显示字符串
-    show_str_s1:
-        mov cx,0
-        mov cl,[si]
-        inc si
-        jcxz show_str_end
-        mov es:[di],cl
-        mov es:[di+1],bl
-        add di,2
-        jmp show_str_s1
-    
-    show_str_end:
-        pop cx
-        pop di
-        pop bx
-        mov ax,si
-        pop si
-        sub ax,si   ;通过前后两次si的差值，计算打印的字符串长度
-        pop es
-        ret
-;---------------------------------------
 ;-----------延时------------------------
 mdelay:
     push ax
@@ -232,5 +174,9 @@ mdelay:
     pop ax
     ret
 ;---------------------------------------
+sector_boot_complete:
+    db 510-($ - offset start) dup(0) ; 填充剩余空间，确保程序总长达到510字节
+    dw 0aa55h           ; 引导扇区结束标志
+
 code ends
 end start
