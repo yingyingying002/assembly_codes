@@ -9,9 +9,6 @@
 ;       2.1. F1     改变显示颜色
 ;       2.2. Esc    返回功能选项界面
 
-; 每次通过键盘缓冲区读取输入，比手动写一个m_int9应该短很多，不需要替换中断例程，也符合当前逻辑
-; --todo: showstr函数删掉，用BIOS自带函数取代
-; --todo: mdelay函数也可以直接替换掉，节省10B空间
 assume cs:code
 ; 程序将被加载到7C00H处，所有地址偏移都基于此计算
 org 7c00h
@@ -153,7 +150,62 @@ display:
     pop bx
     pop ax
     ret
+;---------------------------------------
+; 在指定的位置，用指定的颜色，显示一个用0结束的字符串
+; param:
+;   (dh): 行号(0-24)
+;   (dl): 列号(0-79)
+;   (cl): 颜色
+;   (ds:si): 指向字符串首地址
+; return:
+;   (ax): 打印的字符串长度(含末尾0)
+show_str:
+    push es
+    push si
+    push bx
+    push di
+    push cx
 
+    mov bl,cl
+    mov di,0
+    ; 显示缓冲区段地址
+    mov ax,0B800h
+    mov es,ax
+    ; 起始行-偏移地址-添加到段地址中
+    mov cx,0
+    mov cl,dh
+    mov ax,es
+    show_str_s:
+        add ax,000ah
+        loop show_str_s
+    mov es,ax
+    ; 起始列-偏移地址-添加到di寄存器
+    mov ax,0
+    mov al,dl
+    add al,al ;列偏移*2，因为每一列两个字符
+    add di,ax
+
+    ; 显示字符串
+    show_str_s1:
+        mov cx,0
+        mov cl,[si]
+        inc si
+        jcxz show_str_end
+        mov es:[di],cl
+        mov es:[di+1],bl
+        add di,2
+        jmp show_str_s1
+    
+    show_str_end:
+        pop cx
+        pop di
+        pop bx
+        mov ax,si
+        pop si
+        sub ax,si   ;通过前后两次si的差值，计算打印的字符串长度
+        pop es
+        ret
+;---------------------------------------
 
 ;-----------延时------------------------
 mdelay:
