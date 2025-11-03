@@ -1,26 +1,26 @@
 ; 引导扇区代码
-; 功能：将2~3扇区的系统引导代码放入内存0x7E00处，并执行
-assume cs:code
-org 7C00h  ; 告知编译器程序将被加载到 0x7C00 处[4](@ref)
+; 功能：将2~3扇区的系统引导代码放入内存0:7E00处，并执行
+assume cs:code,ds:code
+;org 7C00h  ; org指令通过masm编译后似乎并没有生效，直接手动修改段地址达到org效果
 
 code segment
 start:
-    jmp real_start
-    next_address dw 0000,7E00h
+    jmp short real_start
+    next_address dw 7E00h,0
     dirve_num db 0
 real_start:
-    ; 初始化段寄存器
-    mov ax, cs
+    ; 初始化段寄存器, 已知代码会被载入0000:7c00(即07c0:0000)运行
+    mov ax,cs
+    add ax,07c0h
     mov ds, ax
-    mov es, ax
 
     ; 引导阶段，BIOS通常会将启动设备的驱动器号放入 DL寄存器
     mov [dirve_num],dl
 
     ; 设置读取主程序的功能参数
-    mov ax, 07E0h   ; 设置目标内存地址 ES:BX 为 0x7E0:0x0000 (即物理地址 0x7E00)
+    mov ax, 0   ; 设置目标内存地址 ES:BX 为 0:7E00 (即物理地址 0x7E00)
     mov es, ax
-    mov bx, 0
+    mov bx, 7E00h
 
     mov ah, 02h    ; 功能号：读扇区
     mov al, 2       ; 要读取的扇区数（根据主程序大小调整）
@@ -73,10 +73,11 @@ show_str:
         add di,2
         jmp show_str_s1
 
-    pop cx
-    pop di
-    pop si
-    pop es
+    show_str_end:
+        pop cx
+        pop di
+        pop si
+        pop es
     ret
 
 code ends

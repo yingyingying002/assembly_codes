@@ -9,9 +9,9 @@
 ;       2.1. F1     改变显示颜色
 ;       2.2. Esc    返回功能选项界面
 
-assume cs:code
+assume cs:code,ds:code
 ; 程序将被加载到7E00H处，所有地址偏移都基于此计算
-org 7E00h
+; org 7E00h ;手动修改段地址达到org 7E00h的效果
 
 code segment
 start:
@@ -26,13 +26,13 @@ start:
     d4 db '4.set clock','\n',0
     option_list dw offset d1, offset d2, offset d3, offset d4
     ;栈段
-    stack db 64 dup(0)
+    stack db 128 dup(0)
 real_start:
     mov ax,cs
+    add ax,07e0h
     mov ds,ax
-    mov ax,cs
     mov ss,ax
-    mov sp,offset stack+64
+    mov sp,offset stack+128
     always_loop:
         mov ax,0    ; ah-当前显示状态,al-当前输入
         mov ah,[cur_display_flag]   ;获取当前显示状态

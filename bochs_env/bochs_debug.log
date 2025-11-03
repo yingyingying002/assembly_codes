@@ -1,0 +1,551 @@
+Bochs internal debugger, type 'help' for help or 'c' to continue
+Switching to CPU0
+Next at t=0
+(0) [0x0000fffffff0] f000:fff0 (unk. ctxt): jmpf 0xf000:e05b          ; ea5be000f0
+<bochs:1> b 0x7e00
+<bochs:2> c
+(0) Breakpoint 1, 0x0000000000007e00 in ?? ()
+Next at t=13900425
+(0) [0x000000007e00] 0000:7e00 (unk. ctxt): jmp .+133  (0x00007e88)   ; e98500
+<bochs:3> u
+0000000000007e00: (                    ): jmp .+133  (0x00007e88)   ; e98500
+<bochs:4> u 0x7e00 0x7eff
+0000000000007e00: (                    ): jmp .+133  (0x00007e88)   ; e98500
+0000000000007e03: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e05: (                    ): add word ptr ds:[bx], ax  ; 0107
+0000000000007e07: (                    ): add ah, byte ptr ds:[si]  ; 0224
+0000000000007e09: (                    ): jno .+49  (0x00007e3c)    ; 7131
+0000000000007e0b: (                    ): jb .+101  (0x00007e73)    ; 2e7265
+0000000000007e0e: (                    ): jnb .+101  (0x00007e75)   ; 7365
+0000000000007e10: (                    ): jz .+32  (0x00007e32)     ; 7420
+0000000000007e12: (                    ): jo .+99  (0x00007e77)     ; 7063
+0000000000007e14: (                    ): pop sp                    ; 5c
+0000000000007e15: (                    ): outsb dx, byte ptr ds:[si] ; 6e
+0000000000007e16: (                    ): add byte ptr ss:[bp+si], dh ; 0032
+0000000000007e18: (                    ): jnb .+116  (0x00007e8f)   ; 2e7374
+0000000000007e1b: (                    ): popa                      ; 61
+0000000000007e1c: (                    ): jb .+116  (0x00007e92)    ; 7274
+0000000000007e1e: (                    ): and byte ptr ss:[bp+di+121], dh ; 207379
+0000000000007e21: (                    ): jnb .+116  (0x00007e97)   ; 7374
+0000000000007e23: (                    ): insw word ptr es:[di], dx ; 656d
+0000000000007e25: (                    ): pop sp                    ; 5c
+0000000000007e26: (                    ): outsb dx, byte ptr ds:[si] ; 6e
+0000000000007e27: (                    ): add byte ptr ss:[bp+di], dh ; 0033
+0000000000007e29: (                    ): arpl word ptr cs:[si+111], bp ; 2e636c6f
+0000000000007e2d: (                    ): arpl word ptr ss:[bp+di+92], bp ; 636b5c
+0000000000007e30: (                    ): outsb dx, byte ptr ds:[si] ; 6e
+0000000000007e31: (                    ): add byte ptr ds:[si], dh  ; 0034
+0000000000007e33: (                    ): jnb .+101  (0x00007e9b)   ; 2e7365
+0000000000007e36: (                    ): jz .+32  (0x00007e58)     ; 7420
+0000000000007e38: (                    ): arpl word ptr ds:[si+111], bp ; 636c6f
+0000000000007e3b: (                    ): arpl word ptr ss:[bp+di+92], bp ; 636b5c
+0000000000007e3e: (                    ): outsb dx, byte ptr ds:[si] ; 6e
+0000000000007e3f: (                    ): add byte ptr ss:[bp+si], cl ; 000a
+0000000000007e41: (                    ): add byte ptr ds:[bx], dl  ; 0017
+0000000000007e43: (                    ): add byte ptr ds:[bx+si], ch ; 0028
+0000000000007e45: (                    ): add byte ptr ss:[bp+si], dh ; 0032
+0000000000007e47: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e49: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e4b: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e4d: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e4f: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e51: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e53: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e55: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e57: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e59: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e5b: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e5d: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e5f: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e61: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e63: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e65: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e67: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e69: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e6b: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e6d: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e6f: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e71: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e73: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e75: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e77: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e79: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e7b: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e7d: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e7f: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e81: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e83: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e85: (                    ): add byte ptr ds:[bx+si], al ; 0000
+0000000000007e87: (                    ): add byte ptr ds:[si+1480], cl ; 008cc805
+0000000000007e8b: (                    ): loopne .+7  (0x00007e94)  ; e007
+0000000000007e8d: (                    ): mov ds, ax                ; 8ed8
+0000000000007e8f: (                    ): mov ax, cs                ; 8cc8
+0000000000007e91: (                    ): mov ss, ax                ; 8ed0
+0000000000007e93: (                    ): mov sp, 0x0088            ; bc8800
+0000000000007e96: (                    ): mov ax, 0x0000            ; b80000
+0000000000007e99: (                    ): mov ah, byte ptr ds:0x0004 ; 8a260400
+0000000000007e9d: (                    ): call .+54  (0x00007ed6)   ; e83600
+0000000000007ea0: (                    ): mov al, byte ptr ds:0x0003 ; a00300
+0000000000007ea3: (                    ): cmp al, 0x3b              ; 3c3b
+0000000000007ea5: (                    ): jz .+7  (0x00007eae)      ; 7407
+0000000000007ea7: (                    ): cmp al, 0x01              ; 3c01
+0000000000007ea9: (                    ): jz .+25  (0x00007ec4)     ; 7419
+0000000000007eab: (                    ): jmp .+30  (0x00007ecb)    ; eb1e
+0000000000007ead: (                    ): nop                       ; 90
+0000000000007eae: (                    ): push ax                   ; 50
+0000000000007eaf: (                    ): mov al, byte ptr ds:0x0005 ; a00500
+0000000000007eb2: (                    ): inc al                    ; fec0
+0000000000007eb4: (                    ): cmp al, 0x05              ; 3c05
+0000000000007eb6: (                    ): jz .+3  (0x00007ebb)      ; 7403
+0000000000007eb8: (                    ): jmp .+3  (0x00007ebd)     ; eb03
+0000000000007eba: (                    ): nop                       ; 90
+0000000000007ebb: (                    ): mov al, 0x01              ; b001
+0000000000007ebd: (                    ): mov byte ptr ds:0x0005, al ; a20500
+0000000000007ec0: (                    ): pop ax                    ; 58
+0000000000007ec1: (                    ): jmp .+8  (0x00007ecb)     ; eb08
+0000000000007ec3: (                    ): nop                       ; 90
+0000000000007ec4: (                    ): mov ah, 0x00              ; b400
+0000000000007ec6: (                    ): mov byte ptr ds:0x0004, 0x00 ; c606040000
+0000000000007ecb: (                    ): call .+33  (0x00007eef)   ; e82100
+0000000000007ece: (                    ): call .+175  (0x00007f80)  ; e8af00
+0000000000007ed1: (                    ): jmp .-61  (0x00007e96)    ; ebc3
+0000000000007ed3: (                    ): call .+197  (0x00007f9b)  ; e8c500
+0000000000007ed6: (                    ): push ax                   ; 50
+0000000000007ed7: (                    ): mov ah, 0x01              ; b401
+0000000000007ed9: (                    ): int 0x16                  ; cd16
+0000000000007edb: (                    ): jz .+11  (0x00007ee8)     ; 740b
+0000000000007edd: (                    ): mov ah, 0x00              ; b400
+0000000000007edf: (                    ): int 0x16                  ; cd16
+0000000000007ee1: (                    ): mov byte ptr ds:0x0003, ah ; 88260300
+0000000000007ee5: (                    ): jmp .+6  (0x00007eed)     ; eb06
+0000000000007ee7: (                    ): nop                       ; 90
+0000000000007ee8: (                    ): mov byte ptr ds:0x0003, 0x00 ; c606030000
+0000000000007eed: (                    ): pop ax                    ; 58
+0000000000007eee: (                    ): ret                       ; c3
+0000000000007eef: (                    ): push ax                   ; 50
+0000000000007ef0: (                    ): push bx                   ; 53
+0000000000007ef1: (                    ): push cx                   ; 51
+0000000000007ef2: (                    ): push dx                   ; 52
+0000000000007ef3: (                    ): push si                   ; 56
+0000000000007ef4: (                    ): push di                   ; 57
+0000000000007ef5: (                    ): push es                   ; 06
+0000000000007ef6: (                    ): cli                       ; fa
+0000000000007ef7: (                    ): mov bx, 0xb800            ; bb00b8
+0000000000007efa: (                    ): mov es, bx                ; 8ec3
+0000000000007efc: (                    ): mov bx, 0x0000            ; bb0000
+<bochs:5> n
+Next at t=13900426
+(0) [0x000000007e88] 0000:7e88 (unk. ctxt): mov ax, cs                ; 8cc8
+<bochs:6> u 0x7e88 0x7eff
+0000000000007e88: (                    ): mov ax, cs                ; 8cc8
+0000000000007e8a: (                    ): add ax, 0x07e0            ; 05e007
+0000000000007e8d: (                    ): mov ds, ax                ; 8ed8
+0000000000007e8f: (                    ): mov ax, cs                ; 8cc8
+0000000000007e91: (                    ): mov ss, ax                ; 8ed0
+0000000000007e93: (                    ): mov sp, 0x0088            ; bc8800
+0000000000007e96: (                    ): mov ax, 0x0000            ; b80000
+0000000000007e99: (                    ): mov ah, byte ptr ds:0x0004 ; 8a260400
+0000000000007e9d: (                    ): call .+54  (0x00007ed6)   ; e83600
+0000000000007ea0: (                    ): mov al, byte ptr ds:0x0003 ; a00300
+0000000000007ea3: (                    ): cmp al, 0x3b              ; 3c3b
+0000000000007ea5: (                    ): jz .+7  (0x00007eae)      ; 7407
+0000000000007ea7: (                    ): cmp al, 0x01              ; 3c01
+0000000000007ea9: (                    ): jz .+25  (0x00007ec4)     ; 7419
+0000000000007eab: (                    ): jmp .+30  (0x00007ecb)    ; eb1e
+0000000000007ead: (                    ): nop                       ; 90
+0000000000007eae: (                    ): push ax                   ; 50
+0000000000007eaf: (                    ): mov al, byte ptr ds:0x0005 ; a00500
+0000000000007eb2: (                    ): inc al                    ; fec0
+0000000000007eb4: (                    ): cmp al, 0x05              ; 3c05
+0000000000007eb6: (                    ): jz .+3  (0x00007ebb)      ; 7403
+0000000000007eb8: (                    ): jmp .+3  (0x00007ebd)     ; eb03
+0000000000007eba: (                    ): nop                       ; 90
+0000000000007ebb: (                    ): mov al, 0x01              ; b001
+0000000000007ebd: (                    ): mov byte ptr ds:0x0005, al ; a20500
+0000000000007ec0: (                    ): pop ax                    ; 58
+0000000000007ec1: (                    ): jmp .+8  (0x00007ecb)     ; eb08
+0000000000007ec3: (                    ): nop                       ; 90
+0000000000007ec4: (                    ): mov ah, 0x00              ; b400
+0000000000007ec6: (                    ): mov byte ptr ds:0x0004, 0x00 ; c606040000
+0000000000007ecb: (                    ): call .+33  (0x00007eef)   ; e82100
+0000000000007ece: (                    ): call .+175  (0x00007f80)  ; e8af00
+0000000000007ed1: (                    ): jmp .-61  (0x00007e96)    ; ebc3
+0000000000007ed3: (                    ): call .+197  (0x00007f9b)  ; e8c500
+0000000000007ed6: (                    ): push ax                   ; 50
+0000000000007ed7: (                    ): mov ah, 0x01              ; b401
+0000000000007ed9: (                    ): int 0x16                  ; cd16
+0000000000007edb: (                    ): jz .+11  (0x00007ee8)     ; 740b
+0000000000007edd: (                    ): mov ah, 0x00              ; b400
+0000000000007edf: (                    ): int 0x16                  ; cd16
+0000000000007ee1: (                    ): mov byte ptr ds:0x0003, ah ; 88260300
+0000000000007ee5: (                    ): jmp .+6  (0x00007eed)     ; eb06
+0000000000007ee7: (                    ): nop                       ; 90
+0000000000007ee8: (                    ): mov byte ptr ds:0x0003, 0x00 ; c606030000
+0000000000007eed: (                    ): pop ax                    ; 58
+0000000000007eee: (                    ): ret                       ; c3
+0000000000007eef: (                    ): push ax                   ; 50
+0000000000007ef0: (                    ): push bx                   ; 53
+0000000000007ef1: (                    ): push cx                   ; 51
+0000000000007ef2: (                    ): push dx                   ; 52
+0000000000007ef3: (                    ): push si                   ; 56
+0000000000007ef4: (                    ): push di                   ; 57
+0000000000007ef5: (                    ): push es                   ; 06
+0000000000007ef6: (                    ): cli                       ; fa
+0000000000007ef7: (                    ): mov bx, 0xb800            ; bb00b8
+0000000000007efa: (                    ): mov es, bx                ; 8ec3
+0000000000007efc: (                    ): mov bx, 0x0000            ; bb0000
+<bochs:7> sreg
+es:0x0000, dh=0x00009300, dl=0x0000ffff, valid=1
+	Data segment, base=0x00000000, limit=0x0000ffff, Read/Write, Accessed
+cs:0x0000, dh=0x00009300, dl=0x0000ffff, valid=1
+	Data segment, base=0x00000000, limit=0x0000ffff, Read/Write, Accessed
+ss:0x0000, dh=0x00009300, dl=0x0000ffff, valid=7
+	Data segment, base=0x00000000, limit=0x0000ffff, Read/Write, Accessed
+ds:0x07c0, dh=0x00009300, dl=0x7c00ffff, valid=3
+	Data segment, base=0x00007c00, limit=0x0000ffff, Read/Write, Accessed
+fs:0x0000, dh=0x00009300, dl=0x0000ffff, valid=1
+	Data segment, base=0x00000000, limit=0x0000ffff, Read/Write, Accessed
+gs:0x0000, dh=0x00009300, dl=0x0000ffff, valid=1
+	Data segment, base=0x00000000, limit=0x0000ffff, Read/Write, Accessed
+ldtr:0x0000, dh=0x00008200, dl=0x0000ffff, valid=1
+tr:0x0000, dh=0x00008b00, dl=0x0000ffff, valid=1
+gdtr:base=0x00000000000f9e67, limit=0x30
+idtr:base=0x0000000000000000, limit=0x3ff
+<bochs:8> n
+Next at t=13900427
+(0) [0x000000007e8a] 0000:7e8a (unk. ctxt): add ax, 0x07e0            ; 05e007
+<bochs:9> trace-reg on
+Register-Tracing enabled for CPU0
+<bochs:10> n
+Next at t=13900428
+rax: 00000000_600007e0
+rbx: 00000000_00007e00
+rcx: 00000000_00090002
+rdx: 00000000_00000000
+rsp: 00000000_0000ffd2
+rbp: 00000000_00000000
+rsi: 00000000_000e0000
+rdi: 00000000_0000ffac
+r8 : 00000000_00000000
+r9 : 00000000_00000000
+r10: 00000000_00000000
+r11: 00000000_00000000
+r12: 00000000_00000000
+r13: 00000000_00000000
+r14: 00000000_00000000
+r15: 00000000_00000000
+rip: 00000000_00007e8d
+eflags: 0x00000202: id vip vif ac vm rf nt IOPL=0 of df IF tf sf zf af pf cf
+(0) [0x000000007e8d] 0000:7e8d (unk. ctxt): mov ds, ax                ; 8ed8
+<bochs:11> n
+Next at t=13900429
+rax: 00000000_600007e0
+rbx: 00000000_00007e00
+rcx: 00000000_00090002
+rdx: 00000000_00000000
+rsp: 00000000_0000ffd2
+rbp: 00000000_00000000
+rsi: 00000000_000e0000
+rdi: 00000000_0000ffac
+r8 : 00000000_00000000
+r9 : 00000000_00000000
+r10: 00000000_00000000
+r11: 00000000_00000000
+r12: 00000000_00000000
+r13: 00000000_00000000
+r14: 00000000_00000000
+r15: 00000000_00000000
+rip: 00000000_00007e8f
+eflags: 0x00000202: id vip vif ac vm rf nt IOPL=0 of df IF tf sf zf af pf cf
+(0) [0x000000007e8f] 0000:7e8f (unk. ctxt): mov ax, cs                ; 8cc8
+<bochs:12> n
+Next at t=13900430
+rax: 00000000_60000000
+rbx: 00000000_00007e00
+rcx: 00000000_00090002
+rdx: 00000000_00000000
+rsp: 00000000_0000ffd2
+rbp: 00000000_00000000
+rsi: 00000000_000e0000
+rdi: 00000000_0000ffac
+r8 : 00000000_00000000
+r9 : 00000000_00000000
+r10: 00000000_00000000
+r11: 00000000_00000000
+r12: 00000000_00000000
+r13: 00000000_00000000
+r14: 00000000_00000000
+r15: 00000000_00000000
+rip: 00000000_00007e91
+eflags: 0x00000202: id vip vif ac vm rf nt IOPL=0 of df IF tf sf zf af pf cf
+(0) [0x000000007e91] 0000:7e91 (unk. ctxt): mov ss, ax                ; 8ed0
+<bochs:13> n
+Next at t=13900431
+rax: 00000000_60000000
+rbx: 00000000_00007e00
+rcx: 00000000_00090002
+rdx: 00000000_00000000
+rsp: 00000000_0000ffd2
+rbp: 00000000_00000000
+rsi: 00000000_000e0000
+rdi: 00000000_0000ffac
+r8 : 00000000_00000000
+r9 : 00000000_00000000
+r10: 00000000_00000000
+r11: 00000000_00000000
+r12: 00000000_00000000
+r13: 00000000_00000000
+r14: 00000000_00000000
+r15: 00000000_00000000
+rip: 00000000_00007e93
+eflags: 0x00000202: id vip vif ac vm rf nt IOPL=0 of df IF tf sf zf af pf cf
+(0) [0x000000007e93] 0000:7e93 (unk. ctxt): mov sp, 0x0088            ; bc8800
+<bochs:14> n
+Next at t=13900432
+rax: 00000000_60000000
+rbx: 00000000_00007e00
+rcx: 00000000_00090002
+rdx: 00000000_00000000
+rsp: 00000000_00000088
+rbp: 00000000_00000000
+rsi: 00000000_000e0000
+rdi: 00000000_0000ffac
+r8 : 00000000_00000000
+r9 : 00000000_00000000
+r10: 00000000_00000000
+r11: 00000000_00000000
+r12: 00000000_00000000
+r13: 00000000_00000000
+r14: 00000000_00000000
+r15: 00000000_00000000
+rip: 00000000_00007e96
+eflags: 0x00000202: id vip vif ac vm rf nt IOPL=0 of df IF tf sf zf af pf cf
+(0) [0x000000007e96] 0000:7e96 (unk. ctxt): mov ax, 0x0000            ; b80000
+<bochs:15> n
+Next at t=13900433
+rax: 00000000_60000000
+rbx: 00000000_00007e00
+rcx: 00000000_00090002
+rdx: 00000000_00000000
+rsp: 00000000_00000088
+rbp: 00000000_00000000
+rsi: 00000000_000e0000
+rdi: 00000000_0000ffac
+r8 : 00000000_00000000
+r9 : 00000000_00000000
+r10: 00000000_00000000
+r11: 00000000_00000000
+r12: 00000000_00000000
+r13: 00000000_00000000
+r14: 00000000_00000000
+r15: 00000000_00000000
+rip: 00000000_00007e99
+eflags: 0x00000202: id vip vif ac vm rf nt IOPL=0 of df IF tf sf zf af pf cf
+(0) [0x000000007e99] 0000:7e99 (unk. ctxt): mov ah, byte ptr ds:0x0004 ; 8a260400
+<bochs:16> n
+Next at t=13900434
+rax: 00000000_60000000
+rbx: 00000000_00007e00
+rcx: 00000000_00090002
+rdx: 00000000_00000000
+rsp: 00000000_00000088
+rbp: 00000000_00000000
+rsi: 00000000_000e0000
+rdi: 00000000_0000ffac
+r8 : 00000000_00000000
+r9 : 00000000_00000000
+r10: 00000000_00000000
+r11: 00000000_00000000
+r12: 00000000_00000000
+r13: 00000000_00000000
+r14: 00000000_00000000
+r15: 00000000_00000000
+rip: 00000000_00007e9d
+eflags: 0x00000202: id vip vif ac vm rf nt IOPL=0 of df IF tf sf zf af pf cf
+(0) [0x000000007e9d] 0000:7e9d (unk. ctxt): call .+54  (0x00007ed6)   ; e83600
+<bochs:17> n
+Next at t=13900526
+rax: 00000000_60000000
+rbx: 00000000_00007e00
+rcx: 00000000_00090002
+rdx: 00000000_00000000
+rsp: 00000000_00000088
+rbp: 00000000_00000000
+rsi: 00000000_000e0000
+rdi: 00000000_0000ffac
+r8 : 00000000_00000000
+r9 : 00000000_00000000
+r10: 00000000_00000000
+r11: 00000000_00000000
+r12: 00000000_00000000
+r13: 00000000_00000000
+r14: 00000000_00000000
+r15: 00000000_00000000
+rip: 00000000_00007ea0
+eflags: 0x00000242: id vip vif ac vm rf nt IOPL=0 of df IF tf sf ZF af pf cf
+(0) [0x000000007ea0] 0000:7ea0 (unk. ctxt): mov al, byte ptr ds:0x0003 ; a00300
+<bochs:18> n
+Next at t=13900527
+rax: 00000000_60000000
+rbx: 00000000_00007e00
+rcx: 00000000_00090002
+rdx: 00000000_00000000
+rsp: 00000000_00000088
+rbp: 00000000_00000000
+rsi: 00000000_000e0000
+rdi: 00000000_0000ffac
+r8 : 00000000_00000000
+r9 : 00000000_00000000
+r10: 00000000_00000000
+r11: 00000000_00000000
+r12: 00000000_00000000
+r13: 00000000_00000000
+r14: 00000000_00000000
+r15: 00000000_00000000
+rip: 00000000_00007ea3
+eflags: 0x00000242: id vip vif ac vm rf nt IOPL=0 of df IF tf sf ZF af pf cf
+(0) [0x000000007ea3] 0000:7ea3 (unk. ctxt): cmp al, 0x3b              ; 3c3b
+<bochs:19> n
+Next at t=13900528
+rax: 00000000_60000000
+rbx: 00000000_00007e00
+rcx: 00000000_00090002
+rdx: 00000000_00000000
+rsp: 00000000_00000088
+rbp: 00000000_00000000
+rsi: 00000000_000e0000
+rdi: 00000000_0000ffac
+r8 : 00000000_00000000
+r9 : 00000000_00000000
+r10: 00000000_00000000
+r11: 00000000_00000000
+r12: 00000000_00000000
+r13: 00000000_00000000
+r14: 00000000_00000000
+r15: 00000000_00000000
+rip: 00000000_00007ea5
+eflags: 0x00000297: id vip vif ac vm rf nt IOPL=0 of df IF tf SF zf AF PF CF
+(0) [0x000000007ea5] 0000:7ea5 (unk. ctxt): jz .+7  (0x00007eae)      ; 7407
+<bochs:20> n
+Next at t=13900529
+rax: 00000000_60000000
+rbx: 00000000_00007e00
+rcx: 00000000_00090002
+rdx: 00000000_00000000
+rsp: 00000000_00000088
+rbp: 00000000_00000000
+rsi: 00000000_000e0000
+rdi: 00000000_0000ffac
+r8 : 00000000_00000000
+r9 : 00000000_00000000
+r10: 00000000_00000000
+r11: 00000000_00000000
+r12: 00000000_00000000
+r13: 00000000_00000000
+r14: 00000000_00000000
+r15: 00000000_00000000
+rip: 00000000_00007ea7
+eflags: 0x00000297: id vip vif ac vm rf nt IOPL=0 of df IF tf SF zf AF PF CF
+(0) [0x000000007ea7] 0000:7ea7 (unk. ctxt): cmp al, 0x01              ; 3c01
+<bochs:21> n
+Next at t=13900530
+rax: 00000000_60000000
+rbx: 00000000_00007e00
+rcx: 00000000_00090002
+rdx: 00000000_00000000
+rsp: 00000000_00000088
+rbp: 00000000_00000000
+rsi: 00000000_000e0000
+rdi: 00000000_0000ffac
+r8 : 00000000_00000000
+r9 : 00000000_00000000
+r10: 00000000_00000000
+r11: 00000000_00000000
+r12: 00000000_00000000
+r13: 00000000_00000000
+r14: 00000000_00000000
+r15: 00000000_00000000
+rip: 00000000_00007ea9
+eflags: 0x00000297: id vip vif ac vm rf nt IOPL=0 of df IF tf SF zf AF PF CF
+(0) [0x000000007ea9] 0000:7ea9 (unk. ctxt): jz .+25  (0x00007ec4)     ; 7419
+<bochs:22> n
+Next at t=13900531
+rax: 00000000_60000000
+rbx: 00000000_00007e00
+rcx: 00000000_00090002
+rdx: 00000000_00000000
+rsp: 00000000_00000088
+rbp: 00000000_00000000
+rsi: 00000000_000e0000
+rdi: 00000000_0000ffac
+r8 : 00000000_00000000
+r9 : 00000000_00000000
+r10: 00000000_00000000
+r11: 00000000_00000000
+r12: 00000000_00000000
+r13: 00000000_00000000
+r14: 00000000_00000000
+r15: 00000000_00000000
+rip: 00000000_00007eab
+eflags: 0x00000297: id vip vif ac vm rf nt IOPL=0 of df IF tf SF zf AF PF CF
+(0) [0x000000007eab] 0000:7eab (unk. ctxt): jmp .+30  (0x00007ecb)    ; eb1e
+<bochs:23> n
+Next at t=13900532
+rax: 00000000_60000000
+rbx: 00000000_00007e00
+rcx: 00000000_00090002
+rdx: 00000000_00000000
+rsp: 00000000_00000088
+rbp: 00000000_00000000
+rsi: 00000000_000e0000
+rdi: 00000000_0000ffac
+r8 : 00000000_00000000
+r9 : 00000000_00000000
+r10: 00000000_00000000
+r11: 00000000_00000000
+r12: 00000000_00000000
+r13: 00000000_00000000
+r14: 00000000_00000000
+r15: 00000000_00000000
+rip: 00000000_00007ecb
+eflags: 0x00000297: id vip vif ac vm rf nt IOPL=0 of df IF tf SF zf AF PF CF
+(0) [0x000000007ecb] 0000:7ecb (unk. ctxt): call .+33  (0x00007eef)   ; e82100
+<bochs:24> s
+Next at t=13900533
+rax: 00000000_60000000
+rbx: 00000000_00007e00
+rcx: 00000000_00090002
+rdx: 00000000_00000000
+rsp: 00000000_00000086
+rbp: 00000000_00000000
+rsi: 00000000_000e0000
+rdi: 00000000_0000ffac
+r8 : 00000000_00000000
+r9 : 00000000_00000000
+r10: 00000000_00000000
+r11: 00000000_00000000
+r12: 00000000_00000000
+r13: 00000000_00000000
+r14: 00000000_00000000
+r15: 00000000_00000000
+rip: 00000000_00007eef
+eflags: 0x00000297: id vip vif ac vm rf nt IOPL=0 of df IF tf SF zf AF PF CF
+(0) [0x000000007eef] 0000:7eef (unk. ctxt): push ax                   ; 50
+<bochs:25> sreg
+es:0x0000, dh=0x00009300, dl=0x0000ffff, valid=1
+	Data segment, base=0x00000000, limit=0x0000ffff, Read/Write, Accessed
+cs:0x0000, dh=0x00009300, dl=0x0000ffff, valid=1
+	Data segment, base=0x00000000, limit=0x0000ffff, Read/Write, Accessed
+ss:0x0000, dh=0x00009300, dl=0x0000ffff, valid=7
+	Data segment, base=0x00000000, limit=0x0000ffff, Read/Write, Accessed
+ds:0x07e0, dh=0x00009300, dl=0x7e00ffff, valid=7
+	Data segment, base=0x00007e00, limit=0x0000ffff, Read/Write, Accessed
+fs:0x0000, dh=0x00009300, dl=0x0000ffff, valid=1
+	Data segment, base=0x00000000, limit=0x0000ffff, Read/Write, Accessed
+gs:0x0000, dh=0x00009300, dl=0x0000ffff, valid=1
+	Data segment, base=0x00000000, limit=0x0000ffff, Read/Write, Accessed
+ldtr:0x0000, dh=0x00008200, dl=0x0000ffff, valid=1
+tr:0x0000, dh=0x00008b00, dl=0x0000ffff, valid=1
+gdtr:base=0x00000000000f9e67, limit=0x30
+idtr:base=0x0000000000000000, limit=0x3ff
+<bochs:26> q
