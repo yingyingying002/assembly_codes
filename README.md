@@ -12,8 +12,7 @@ DosBox
 masm编译工具链
 UltraIso    生成软盘镜像.ima
 Winhex      可以直接查看ima文件的二进制内容，方便检查
-Bochs       调试操作系统，检查系统启动过程的问题
-virtualBox、vmWare等虚拟机管理软件
+Bochs       调试、启动操作系统，可逐步检查系统启动过程的问题
 ```
 
 #### 一、编写启动引导代码boot.asm，实现系统启动后读取多扇区部署的完整课程设计代码
@@ -56,10 +55,10 @@ exe2bin design2.exe design2.bin
 2. design2.bin文件写入扇区2~3
 ```
 
-#### 五、配置虚拟机从软盘启动
-virtualBox、vmware等软件，都可以创建虚拟机并从软盘启动
+#### 五、配置bochs从软盘启动
+virtualBox、vmware等软件，也可以创建虚拟机并从软盘启动，但是bochs可以逐步调试启动过程，功能非常强大。
 
 ```
-配置virtualBox虚拟机从软盘启动
-https://soft.zol.com.cn/1046/10462984.html
+Bochs调试入门
+https://zhuanlan.zhihu.com/p/682184133
 ```
