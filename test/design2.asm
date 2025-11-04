@@ -120,26 +120,37 @@ display:
         loop display_clear
     sti
 
-    ; 0.显示主界面
-    case_0:
-        mov di,0                ;di-当前打印功能
-        mov bh,0
-        mov bl,color_list[0]    ;bx-当前打印字体颜色 
-        mov cx,4
-        mov dh,2
-        mov dl,20
+    ; 判断要显示那个界面
+    cmp ah,1
+    je case_1
+    cmp ah,2
+    je case_2
+    cmp ah,3
+    je case_3
+    cmp ah,4
+    je case_4
 
-        case_0_loop:
-            push cx
-            mov cl,color_list[bx]
-            mov si, option_list[di]
-            call show_str
-            add dh,2
-            add di,2
-            pop cx
-            loop case_0_loop
+    ; 0.显示主界面
+    default_case:
+        call menu0_main_menu
         jmp display_end
-    ;刷新显存全部内容的颜色，颜色按照color_list中的颜色和位置指定
+
+    ; 1. 重新启动 -- todo：把1~4界面都先做成字符串显示，检查界面切换是否好用
+    case_1:
+        call menu1_reset_pc
+        jmp display_end
+    ; 2. 使用硬盘c的操作系统启动
+    case_2:
+        call menu2_start_system
+        jmp display_end
+    ; 3. 进入时钟程序
+    case_3:
+        call menu3_show_clock
+        jmp display_end
+    ; 4. 设置时间
+    case_4:
+        call menu4_swt_clock
+        jmp display_end
 
     display_end:
     pop es
@@ -158,8 +169,9 @@ display:
 ;   (cl): 颜色
 ;   (ds:si): 指向字符串首地址
 ; return:
-;   (ax): 打印的字符串长度(含末尾0)
+;   无
 show_str:
+    push ax
     push es
     push si
     push bx
@@ -200,10 +212,9 @@ show_str:
         pop cx
         pop di
         pop bx
-        mov ax,si
         pop si
-        sub ax,si   ;通过前后两次si的差值，计算打印的字符串长度
         pop es
+        pop ax
         ret
 ;---------------------------------------
 
@@ -226,6 +237,126 @@ mdelay:
     pop ax
     ret
 ;---------------------------------------
+
+;param:
+;   (ah) = 当前显示状态
+;   (al) = al为功能列表，al=0~4, al=0表示无输入
+menu0_main_menu:
+    push ax
+    push bx
+    push cx
+    push dx
+    push si
+    push di
+
+    mov di,0                ;di-当前打印功能
+    mov bh,0
+    mov bl,color_list[0]    ;bx-当前打印字体颜色 
+    mov cx,4
+    mov dh,2
+    mov dl,20
+
+    default_case_loop:
+        push cx
+        mov cl,color_list[bx]
+        mov si, option_list[di]
+        call show_str
+        add dh,2
+        add di,2
+        pop cx
+        loop default_case_loop
+    ; 根据输入，修改下次要显示的界面,即al=02h~05h(1~4的扫描码), 否则不修改
+    check_memu_option_input:
+        cmp al,05h
+        ja check_memu_option_input_end
+        cmp al,02h
+        jb check_memu_option_input_end
+        dec al
+        mov [cur_display_flag], al
+    check_memu_option_input_end:
+        pop di
+        pop si
+        pop dx
+        pop cx
+        pop bx
+        pop ax
+    ret
+menu1_reset_pc:
+    push ax
+    push bx
+    push cx
+    push dx
+    mov byte ptr [cur_display_flag], 1
+    ;-- temp test
+        mov bh,0
+        mov bl,color_list[0]    ;bx-当前打印字体颜色 
+        mov dh,12
+        mov dl,12
+        mov cl,color_list[bx]
+        mov si, option_list[0]
+        call show_str
+    pop dx
+    pop cx
+    pop bx
+    pop ax
+    ret
+menu2_start_system:
+    push ax
+    push bx
+    push cx
+    push dx
+    mov byte ptr [cur_display_flag], 2
+    ;-- temp test
+        mov bh,0
+        mov bl,color_list[0]    ;bx-当前打印字体颜色 
+        mov dh,12
+        mov dl,12
+        mov cl,color_list[bx]
+        mov si, option_list[2]
+        call show_str
+    pop dx
+    pop cx
+    pop bx
+    pop ax
+    ret
+menu3_show_clock:
+    push ax
+    push bx
+    push cx
+    push dx
+    mov byte ptr [cur_display_flag], 3
+    ;-- temp test
+        mov bh,0
+        mov bl,color_list[0]    ;bx-当前打印字体颜色 
+        mov dh,12
+        mov dl,12
+        mov cl,color_list[bx]
+        mov si, option_list[4]
+        call show_str
+    pop dx
+    pop cx
+    pop bx
+    pop ax
+    ret
+menu4_swt_clock:
+    push ax
+    push bx
+    push cx
+    push dx
+    mov byte ptr [cur_display_flag], 4
+    ;-- temp test
+        mov bh,0
+        mov bl,color_list[0]    ;bx-当前打印字体颜色 
+        mov dh,12
+        mov dl,12
+        mov cl,color_list[bx]
+        mov si, option_list[6]
+        call show_str
+    pop dx
+    pop cx
+    pop bx
+    pop ax
+    ret
 sector_boot_complete:
     db 1022-($ - offset start) dup(0) ; 填充剩余空间，确保程序总长达到510字节
     dw 0aa55h           ; 引导扇区结束标志

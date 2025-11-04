@@ -9,10 +9,10 @@
 以windos系统为例
 ```
 DosBox  
-masm编译工具链
-UltraIso    生成软盘镜像.ima
-Winhex      可以直接查看ima文件的二进制内容，方便检查
-Bochs       调试、启动操作系统，可逐步检查系统启动过程的问题
+masm                    编译工具链
+UltraIso                生成软盘镜像.ima
+Winhex或BinaryViewer等  可以直接查看ima文件的二进制内容，方便检查
+Bochs                   调试、启动操作系统，可逐步检查系统启动过程的问题
 ```
 
 #### 一、编写启动引导代码boot.asm，实现系统启动后读取多扇区部署的完整课程设计代码
