@@ -1,4 +1,4 @@
-; 编写计算机启动程序，并存入软盘a的2、3扇区;
+; 编写计算机启动程序，并存入软盘a的2、3、4扇区;
 ; 涉及功能
 ;   1. 功能选项界面
 ;       1.1. 重新启动
@@ -149,7 +149,7 @@ display:
         jmp display_end
     ; 4. 设置时间
     case_4:
-        call menu4_swt_clock
+        call menu4_set_clock
         jmp display_end
 
     display_end:
@@ -282,24 +282,12 @@ menu0_main_menu:
         pop ax
     ret
 menu1_reset_pc:
-    push ax
-    push bx
-    push cx
-    push dx
+    reset_address dw 0,0ffffh
+menu1_real_start:
     mov byte ptr [cur_display_flag], 1
-    ;-- temp test
-        mov bh,0
-        mov bl,color_list[0]    ;bx-当前打印字体颜色 
-        mov dh,12
-        mov dl,12
-        mov cl,color_list[bx]
-        mov si, option_list[0]
-        call show_str
-    pop dx
-    pop cx
-    pop bx
-    pop ax
+    jmp far ptr [reset_address]
     ret
+
 menu2_start_system:
     push ax
     push bx
@@ -314,51 +302,184 @@ menu2_start_system:
         mov cl,color_list[bx]
         mov si, option_list[2]
         call show_str
+    ; 1. 硬盘c的0道0面1扇区读入内存0:7c00h
+
+    ; 2. 跳转到0:7c00h开始执行
     pop dx
     pop cx
     pop bx
     pop ax
     ret
+
 menu3_show_clock:
+    jmp short menu3_real_start
+    t_positon db 9,8,7,6,2,0    ;年月日 时分秒对应的位置 
+    t_char    db "// :: ",0     ;格式所需的分隔符
+menu3_real_start:
     push ax
     push bx
     push cx
     push dx
+    push si
+    push di
+    push es
     mov byte ptr [cur_display_flag], 3
-    ;-- temp test
-        mov bh,0
-        mov bl,color_list[0]    ;bx-当前打印字体颜色 
-        mov dh,12
-        mov dl,12
-        mov cl,color_list[bx]
-        mov si, option_list[4]
-        call show_str
+    mov ax,0b800h
+    mov es,ax
+
+    ; 通过循环 读取时间信息
+    mov cx,6
+    mov si,offset t_positon     ;读取位置信息
+    mov bx,offset t_char        ;读取分隔符信息
+    mov di,0
+    s:
+        push cx
+        ;读取ROM中的时间信息
+        mov al,ds:[si]
+        out 70h,al
+        in al,71h
+        ;BCD码转换为ASCII码
+        mov cl,4
+        mov ah,al
+        shr ah,cl
+        and al,0fh
+        add ah,30h
+        add al,30h
+        ;显示两个ASCII码
+        mov es:[di+160*12],ah
+        mov byte ptr es:[di+160*12+1],2
+        mov es:[di+160*12+2],al
+        mov byte ptr es:[di+160*12+3],2
+        ;显示分隔符
+        mov al,ds:[bx+si]
+        mov es:[di+160*12+4],al
+        mov byte ptr es:[di+160*12+5],2
+        ;更新信息
+        add di,6
+        inc si
+        pop cx
+        loop s
+
+    pop es
+    pop di
+    pop si    
     pop dx
     pop cx
     pop bx
     pop ax
     ret
-menu4_swt_clock:
+menu4_set_clock:
+    menu4_msg1 db 'please input year: ',0
+    menu4_msg2 db 'please input month: ',0
+    menu4_msg3 db 'please input day: ',0
+    menu4_msg4 db 'please input hour: ',0
+    menu4_msg5 db 'please input minute: ',0
+    menu4_msg6 db 'please input second: ',0
+    menu4_change_success db 'change success',0
+    menu4_change_fail db 'not change',0
+    menu4_change_end db 'menu4 change end, type enter to exit',0
+    menu4_msg_table dw offset menu4_msg1,offset menu4_msg2,offset menu4_msg3
+                    dw offset menu4_msg4,offset menu4_msg5,offset menu4_msg6 
+    menu4_buffer db 0fh,0fh     ;注意CMOS RAM中通过BCD码保存最多两位数字(两个0~9), 默认0fh表示无输入
+                 db 0           ;
+menu4_real_start:
     push ax
     push bx
     push cx
     push dx
+    push si
+    push di
+
     mov byte ptr [cur_display_flag], 4
-    ;-- temp test
-        mov bh,0
-        mov bl,color_list[0]    ;bx-当前打印字体颜色 
-        mov dh,12
-        mov dl,12
-        mov cl,color_list[bx]
-        mov si, option_list[6]
+    
+    mov cx,6
+    mov bh,0
+    mov bl,color_list[0]    ;bx-当前打印字体颜色
+    mov cl,color_list[bx]
+    mov dh,0                ;dh-打印行
+    mov dl,0                ;dl-打印列
+    mov bx,0                ;bx-记录循环次数
+    menu4_input_loop:
+        ;1. 打印信息，提示当前修改内容
+        mov si,menu4_msg_table[bx]
         call show_str
-    pop dx
-    pop cx
-    pop bx
-    pop ax
+        inc dh
+        ;2. 检查输入,若有则显示出来并存入buffer。若输入enter或已输入两个字符则输入结束
+        mov si,offset menu4_buffer  ;si-指向输入缓冲区，准备打印
+        mov di,0            ;di-记录当前写入buffer的位置
+        menu4_check_input:
+            call get_one_char
+            cmp [input],0       ;无输入
+            je menu4_check_loop_again
+            cmp [input],1ch     ;enter键，强制完成检查
+            je menu4_check_input_end
+            cmp [input],02h     ;不在0~9的范围之内，注意`1~9`是02~0A,`0`是0B
+            jb menu4_check_loop_again
+            cmp [input],0bh
+            jb menu4_check_loop_again
+            ; 2.1. 扫描码转数字再写入缓存,便于显示
+            mov al,[input]
+            dec al
+            cmp al,0ah
+            jne menu4_scan_code_2_number_end
+            mov al,0
+            menu4_scan_code_2_number_end:
+                mov menu4_buffer[di],al
+                inc di
+            ; 2.2. 显示已输入内容
+            call show_str
+            cmp di,2
+            je menu4_check_input_end    ;已输入2位，且符合数字范围，完成检查
+            menu4_check_loop_again:
+                jmp menu4_check_input
+        menu4_check_input_end:
+            inc dh
+        ;3. buffer中的数字转为BCD码写入端口
+        ;3.1. 通过70h端口指定存放单元
+        mov al,t_positon[bx]
+        out 70h,al
+        ;3.2. 转BCD码，并通过71h端口写入数值
+        mov al,menu4_buffer[0]
+        push cx
+        mov cl,4
+        shl al,cl
+        pop cx
+        or al,menu4_buffer[1]
+        out 71h,al
+
+        ;4. 打印是否修改成功的信息
+        cmp di,0
+        jne menu4_one_line_change_success
+        mov si,offset menu4_change_fail
+        jmp menu4_one_line_change_end
+        menu4_one_line_change_success:
+            mov si,offset menu4_change_success
+        menu4_one_line_change_end:
+            call show_str
+            inc bx
+            inc dh
+        loop menu4_input_loop
+    
+    ;5. 打印修改完成提示，等待输入enter退出到主界面
+    mov si,offset menu4_change_end
+    call show_str
+    menu4_wait_enter:
+        call get_one_char
+        cmp [input],1ch     ;enter键，强制完成检查
+        je menu4_end
+        jmp menu4_wait_enter
+
+    menu4_end:
+        mov byte ptr [cur_display_flag], 0
+        pop di
+        pop si
+        pop dx
+        pop cx
+        pop bx
+        pop ax
     ret
 sector_boot_complete:
-    db 1022-($ - offset start) dup(0) ; 填充剩余空间，确保程序总长达到510字节
+    db 1534-($ - offset start) dup(0) ; 填充剩余空间，确保程序总长达到1536字节
     dw 0aa55h           ; 引导扇区结束标志
 
 code ends

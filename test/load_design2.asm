@@ -2,7 +2,7 @@
 assume cs:code,ds:data,ss:stack
 
 data segment
-    buffer db 1024 dup(0)    ;两个扇区大小
+    buffer db 1536 dup(0)    ;三个扇区大小
     cur_file dw 0       ;当前要处理的文件
     boot_file_name db 'c:\BOOT.BIN',0,'$'
     design2_file_name db 'c:\DESIGN2.BIN',0,'$'
@@ -41,11 +41,11 @@ start:
     mov byte ptr [sector_number],1
     call upload_2_floppy_disk
 
-    ;读取文件design2.bin，写入扇区2~3
+    ;读取文件design2.bin，写入扇区2~4
     mov ax, table[4]
     mov [cur_file], ax
     mov byte ptr [start_sector],2
-    mov byte ptr [sector_number],2
+    mov byte ptr [sector_number],3
     call upload_2_floppy_disk
 
     mov ax,4c00h
